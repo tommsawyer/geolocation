@@ -2,8 +2,8 @@ package geolocation
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
+	"net/url"
 )
 
 type yandexResponse struct {
@@ -13,7 +13,12 @@ type yandexResponse struct {
 }
 
 func translate(word string) (string, error) {
-	rsp, err := http.Get(fmt.Sprintf("https://translate.yandex.net/api/v1.5/tr.json/translate?key=%s&text=%s&lang=ru", YandexKey, word))
+	v := make(url.Values)
+	v.Set("key", YandexKey)
+	v.Set("text", word)
+	v.Set("lang", "en-ru")
+
+	rsp, err := http.Get("https://translate.yandex.net/api/v1.5/tr.json/translate?" + v.Encode())
 	if err != nil {
 		return "", err
 	}
